@@ -1,0 +1,4 @@
+repo_url: "https://github.com/somniac2103/control-server-bootstrap.git"
+repo_dest: "/opt/control-server-bootstrap"
+repo_branch: "main"
+something
