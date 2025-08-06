@@ -12,7 +12,6 @@
       - hardware
       - network
       - virtual
-      - facts
       - distribution
       - mounts
       - loadavg
