@@ -1,0 +1,12 @@
+cron_jobs:
+  - name: "control-bootstrap"
+    interval: "1"
+    delay: "5"
+    identifier: "control-bootstrap"
+    command: "/opt/control-server-bootstrap/run_playbook.sh"
+
+  - name: "system-health"
+    interval: "1"
+    delay: "10"
+    identifier: "system-health"
+    command: "/opt/control-server-bootstrap/run_health_check.sh"

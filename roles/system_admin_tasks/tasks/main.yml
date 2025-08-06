@@ -1,0 +1,64 @@
+---
+
+- name: Update apt cache and upgrade system
+  apt:
+    update_cache: yes
+    upgrade: dist
+  become: true
+
+- name: Gather disk usage and system facts
+  setup:
+    gather_subset:
+      - hardware
+      - network
+      - virtual
+      - facts
+      - distribution
+      - mounts
+      - loadavg
+
+- name: Check services status
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+  loop: "{{ services_to_check }}"
+  register: services_check
+  ignore_errors: true
+
+- name: Build list of service states
+  set_fact:
+    services_status: >-
+      {{
+        services_check.results | map(attribute='item') | zip(
+          services_check.results | map(attribute='state')
+        ) | map('combine', [{'name': item[0], 'state': item[1]}])
+      }}
+
+- name: Ensure anacrontab.d directory exists
+  file:
+    path: "/etc/anacrontab.d"
+    state: directory
+    mode: '0755'
+  become: true
+
+- name: Create anacron job entries
+  copy:
+    dest: "/etc/anacrontab.d/{{ item.identifier }}"
+    content: "{{ item.interval }}\t{{ item.delay }}\t{{ item.identifier }}\t{{ item.command }}\n"
+    mode: '0644'
+  loop: "{{ cron_jobs }}"
+  become: true
+
+- name: Add loader for anacrontab.d entries
+  lineinfile:
+    path: /etc/anacrontab
+    line: 'include /etc/anacrontab.d/*'
+    create: yes
+    state: present
+  become: true
+
+- name: Render system health report
+  template:
+    src: system_health_report.j2
+    dest: "{{ log_file_path }}"
+    mode: '0644'

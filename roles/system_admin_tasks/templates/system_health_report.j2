@@ -1,0 +1,15 @@
+System Health Report - {{ ansible_date_time.iso8601 }}
+
+=== System Uptime & Load ===
+Uptime: {{ ansible_uptime }}
+Load Average: {{ ansible_loadavg }}
+
+=== Disk Usage ===
+{% for mount in ansible_mounts %}
+Mount: {{ mount.mount }} | Size: {{ mount.size_total | human_readable }} | Used: {{ mount.size_used | human_readable }}
+{% endfor %}
+
+=== Service Status ===
+{% for service in services_status %}
+Service: {{ service.name }} | State: {{ service.state }}
+{% endfor %}

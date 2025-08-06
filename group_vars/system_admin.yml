@@ -1,0 +1,7 @@
+log_file_path: "/var/log/system-health.log"
+
+services_to_check:
+  - ssh
+  - cron
+  - systemd-timesyncd
+  - fail2ban

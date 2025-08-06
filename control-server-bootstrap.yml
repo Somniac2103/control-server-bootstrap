@@ -26,11 +26,28 @@
         dest: "{{ repo_dest }}"
         version: "{{ repo_branch }}"
         force: yes
-    
-    - name: Gather minimal facts
-      setup:
-        filter: "ansible_date_time"
 
+ # --- RUN ADMIN & CRON ROLES ---
+
+- name: Run system admin tasks and cron jobs
+  hosts: 127.0.0.1
+  connection: local
+  gather_facts: false
+  become: true
+  vars_files:
+    - group_vars/system_admin.yml
+    - group_vars/cron_jobs.yml
+  roles:
+    - system_admin_tasks
+    - cron_jobs
+
+# --- OPTIONAL: FINAL CONFIRMATION MESSAGE ---
+
+- name: Confirm playbook execution time
+  hosts: 127.0.0.1
+  connection: local
+  gather_facts: true
+  tasks:
     - name: Print confirmation message
       debug:
-        msg: "Cron job ran successfully at {{ ansible_date_time.iso8601 }}"
+        msg: "Control playbook ran successfully at {{ ansible_date_time.iso8601 }}"
