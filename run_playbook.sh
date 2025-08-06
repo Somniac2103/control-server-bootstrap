@@ -16,8 +16,12 @@ check_passwordless_sudo() {
 
 run_playbook() {
     echo "[$(date)] ✅ Passwordless sudo confirmed. Running Ansible playbook..." | tee -a "$LOG_FILE"
-    $ANSIBLE_BIN -i "$INVENTORY" "$PLAYBOOK_PATH" >> "$LOG_FILE" 2>&1
-    echo "[$(date)] ✅ Playbook finished." | tee -a "$LOG_FILE"
+
+    if $ANSIBLE_BIN -i "$INVENTORY" "$PLAYBOOK_PATH" >> "$LOG_FILE" 2>&1; then
+        echo "[$(date)] ✅ Playbook finished successfully." | tee -a "$LOG_FILE"
+    else
+        echo "[$(date)] ❌ Playbook failed with exit code $?. Check the log above." | tee -a "$LOG_FILE"
+    fi
 }
 
 handle_failure() {
