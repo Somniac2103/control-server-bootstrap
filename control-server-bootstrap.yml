@@ -27,6 +27,10 @@
         version: "{{ repo_branch }}"
         force: yes
     
+    - name: Gather minimal facts
+      setup:
+        filter: "ansible_date_time"
+
     - name: Print confirmation message
       debug:
         msg: "Cron job ran successfully at {{ ansible_date_time.iso8601 }}"
