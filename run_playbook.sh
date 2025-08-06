@@ -32,16 +32,16 @@ run_playbook() {
 }
 
 
-# handle_failure() {
-#     echo "[$(date)] ❌ ERROR: Passwordless sudo is not enabled for user '$USER'" | tee -a "$LOG_FILE"
-#     echo "[$(date)] ❌ Playbook was NOT executed." | tee -a "$LOG_FILE"
-#     exit 1
-# }
+handle_failure() {
+    echo "[$(date)] ❌ ERROR: Passwordless sudo is not enabled for user '$USER'" | tee -a "$LOG_FILE"
+    echo "[$(date)] ❌ Playbook was NOT executed." | tee -a "$LOG_FILE"
+    exit 1
+}
 
-# # === MAIN EXECUTION ===
+# === MAIN EXECUTION ===
 
-# if check_passwordless_sudo; then
-#     run_playbook
-# else
-#     handle_failure
-# fi
+if check_passwordless_sudo; then
+    run_playbook
+else
+    handle_failure
+fi
