@@ -19,7 +19,7 @@ check_passwordless_sudo() {
 run_playbook() {
     echo "[$(date)] ✅ Passwordless sudo confirmed. Running Ansible playbook..." | tee -a "$LOG_FILE"
 
-    echo "[$(date)] ➡️ Executing1: $ANSIBLE_BIN -i $INVENTORY $PLAYBOOK_PATH" | tee -a "$LOG_FILE"
+    echo "[$(date)] ➡️ Executing: $ANSIBLE_BIN -i $INVENTORY $PLAYBOOK_PATH" | tee -a "$LOG_FILE"
 
     $ANSIBLE_BIN -i "$INVENTORY" "$PLAYBOOK_PATH" >> "$LOG_FILE" 2>&1
     RC=$?
