@@ -1,45 +1,47 @@
 #!/bin/bash
 
-# === CONFIGURATION ===
-USER="$(whoami)"
-PLAYBOOK_PATH="/opt/control-server-bootstrap/control-server-bootstrap.yml"
-INVENTORY="127.0.0.1,"
-ANSIBLE_BIN="/usr/bin/ansible-playbook"
-LOG_FILE="/var/log/ansible-playbook.log"
+/usr/bin/ansible-playbook -i "127.0.0.1," /opt/control-server-bootstrap/control-server-bootstrap.yml
 
-# === FUNCTIONS ===
+# # === CONFIGURATION ===
+# USER="$(whoami)"
+# PLAYBOOK_PATH="/opt/control-server-bootstrap/control-server-bootstrap.yml"
+# INVENTORY="127.0.0.1,"
+# ANSIBLE_BIN="/usr/bin/ansible-playbook"
+# LOG_FILE="/var/log/ansible-playbook.log"
 
-check_passwordless_sudo() {
-    sudo -n true 2>/dev/null
-    return $?
-}
+# # === FUNCTIONS ===
 
-run_playbook() {
-    echo "[$(date)] ✅ Passwordless sudo confirmed. Running Ansible playbook..." | tee -a "$LOG_FILE"
+# check_passwordless_sudo() {
+#     sudo -n true 2>/dev/null
+#     return $?
+# }
 
-    echo "[$(date)] ➡️ Executing: $ANSIBLE_BIN -i $INVENTORY $PLAYBOOK_PATH" | tee -a "$LOG_FILE"
+# run_playbook() {
+#     echo "[$(date)] ✅ Passwordless sudo confirmed. Running Ansible playbook..." | tee -a "$LOG_FILE"
 
-    $ANSIBLE_BIN -i "$INVENTORY" "$PLAYBOOK_PATH" >> "$LOG_FILE" 2>&1
-    RC=$?
+#     echo "[$(date)] ➡️ Executing: $ANSIBLE_BIN -i $INVENTORY $PLAYBOOK_PATH" | tee -a "$LOG_FILE"
 
-    if [[ $RC -eq 0 ]]; then
-        echo "[$(date)] ✅ Playbook finished successfully." | tee -a "$LOG_FILE"
-    else
-        echo "[$(date)] ❌ Playbook failed with exit code $RC" | tee -a "$LOG_FILE"
-    fi
-}
+#     $ANSIBLE_BIN -i "$INVENTORY" "$PLAYBOOK_PATH" >> "$LOG_FILE" 2>&1
+#     RC=$?
+
+#     if [[ $RC -eq 0 ]]; then
+#         echo "[$(date)] ✅ Playbook finished successfully." | tee -a "$LOG_FILE"
+#     else
+#         echo "[$(date)] ❌ Playbook failed with exit code $RC" | tee -a "$LOG_FILE"
+#     fi
+# }
 
 
-handle_failure() {
-    echo "[$(date)] ❌ ERROR: Passwordless sudo is not enabled for user '$USER'" | tee -a "$LOG_FILE"
-    echo "[$(date)] ❌ Playbook was NOT executed." | tee -a "$LOG_FILE"
-    exit 1
-}
+# handle_failure() {
+#     echo "[$(date)] ❌ ERROR: Passwordless sudo is not enabled for user '$USER'" | tee -a "$LOG_FILE"
+#     echo "[$(date)] ❌ Playbook was NOT executed." | tee -a "$LOG_FILE"
+#     exit 1
+# }
 
-# === MAIN EXECUTION ===
+# # === MAIN EXECUTION ===
 
-if check_passwordless_sudo; then
-    run_playbook
-else
-    handle_failure
-fi
+# if check_passwordless_sudo; then
+#     run_playbook
+# else
+#     handle_failure
+# fi
