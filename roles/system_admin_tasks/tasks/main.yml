@@ -26,12 +26,8 @@
 
 - name: Build list of service states
   set_fact:
-    services_status: >-
-      {{
-        services_check.results | map(attribute='item') | zip(
-          services_check.results | map(attribute='state')
-        ) | map('combine', [{'name': item[0], 'state': item[1]}])
-      }}
+    services_status: "{{ services_check.results | map(attribute='item') | zip(services_check.results | map(attribute='status')) | list }}"
+
 
 - name: Render system health report
   template:
