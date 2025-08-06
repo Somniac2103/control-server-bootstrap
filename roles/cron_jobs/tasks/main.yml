@@ -1,0 +1,23 @@
+---
+- name: Ensure anacrontab.d directory exists
+  file:
+    path: "/etc/anacrontab.d"
+    state: directory
+    mode: '0755'
+  become: true
+
+- name: Create anacron job entries
+  copy:
+    dest: "/etc/anacrontab.d/{{ item.identifier }}"
+    content: "{{ item.interval }}\t{{ item.delay }}\t{{ item.identifier }}\t{{ item.command }}\n"
+    mode: '0644'
+  loop: "{{ cron_jobs }}"
+  become: true
+
+- name: Ensure /etc/anacrontab includes custom directory
+  lineinfile:
+    path: /etc/anacrontab
+    line: 'include /etc/anacrontab.d/*'
+    create: yes
+    state: present
+  become: true
